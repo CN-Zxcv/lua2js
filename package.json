@@ -1,0 +1,23 @@
+{
+  "name": "lua2js-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "escodegen": "^1.14.3",
+    "esprima": "^4.0.1",
+    "luaparse": "^0.3.0",
+    "minimist": "^1.2.5",
+    "unquote": "^1.1.1"
+  },
+  "scripts": {
+    "dev": "node app.js",
+    "pkg" : "pkg . --out-path=dist/"
+  },
+  "pkg" : {
+      "scripts" : ["app.js"],
+      "assets" : [],
+      "targets" : ["node12-win-x64"]
+  },
+  "bin" : "app.js"
+}
