@@ -17,7 +17,8 @@ let resmng = {
     load(path)
     {
         const str = fs.readFileSync(path + '.js', 'utf-8')
-        vm.runInContext(str, resmng)
+        const script = new vm.Script(str, {filename: path})
+        script.runInContext(resmng)
     },
 }
 resmng.resmng = resmng
