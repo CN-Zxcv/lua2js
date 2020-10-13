@@ -5,6 +5,7 @@ const escodegen = require('escodegen')
 const luaParser = require('luaparse')
 const fs = require('fs')
 const minimist = require('minimist')
+const util = require('util')
 
 const esprimaConfig = {
     // comment : true,
@@ -169,6 +170,10 @@ translator = {
             arguments.push(trans(arg))
         }
 
+        if (callee.type == 'MemberExpression' && callee.object.name == 'math') {
+            callee.object.name = 'Math'
+        }
+
         return {
             type : "CallExpression",
             callee : callee,
@@ -226,13 +231,31 @@ translator = {
         }
     },
     BinaryExpression : (ast) => {
-        const operator = operatorMap[ast.operator] ? operatorMap[ast.operator] : ast.operator
-
-        return {
-            type : "BinaryExpression",
-            operator : operator,
-            left : trans(ast.left),
-            right : trans(ast.right),
+        switch(ast.operator) {
+            case '~=' : {
+                return {
+                    type : "BinaryExpression",
+                    operator : '!=',
+                    left : trans(ast.left),
+                    right : trans(ast.right),
+                }
+            }
+            case '^' : {
+                const fragment = generateJsASTFragment("Math.pow(1, 1)")
+                fragment.arguments = [
+                    trans(ast.left),
+                    trans(ast.right),
+                ]
+                return fragment
+            }
+            default : {
+                return {
+                    type : "BinaryExpression",
+                    operator : ast.operator,
+                    left : trans(ast.left),
+                    right : trans(ast.right),
+                }
+            }
         }
     },
     UnaryExpression : (ast) => {
@@ -260,6 +283,18 @@ function compile(str)
     return trans(luaParser.parse(str))
 }
 
+function generateJsASTFragment(jsStr)
+{
+    const ast = esprima.parse(jsStr, esprima)
+    return ast.body[0].expression
+}
+
+function generateLuaASTFragment(luaStr)
+{
+    const ast = luaParser.parse(luaStr)
+    return ast.body[0].expression
+}
+
 function compareAST(jsStr, luaStr)
 {
     const jsAST = esprima.parse(jsStr, esprimaConfig)
@@ -284,6 +319,8 @@ function compareAST(jsStr, luaStr)
 // console.log(code)
 
 // compareAST("const a = -100", "local a = -100")
+// compareAST("const a = Math.pow(2, 10)", "local a = 2 ^ 10")
+// compareAST("Math.pow(2, 10)", "math.pow(2, 10)")
 
 // compareAST("// let a = 1", "-- local a = 1")
 

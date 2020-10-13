@@ -39,6 +39,7 @@ CalculatePrecise = 10000
 
 HourSec = 60 * 60
 DaySec = 24 * 60 * 60
+WorldTimeOver = 2^31 - 1
 
 --操作符
 Eq = 1      -- ==

@@ -12,7 +12,7 @@ PlayMode = {
 PlayModeGroup = setmetatable({ Story: 1 }, {
     __index: {
         isStory: mode => {
-            return math.floor(mode / 100) == PlayModeGroup.Story;
+            return Math.floor(mode / 100) == PlayModeGroup.Story;
         }
     }
 });
@@ -30,6 +30,7 @@ RandomDivisor = 10000;
 CalculatePrecise = 10000;
 HourSec = 60 * 60;
 DaySec = 24 * 60 * 60;
+WorldTimeOver = Math.pow(2, 31) - 1;
 Eq = 1;
 Neq = 2;
 Gt = 3;
