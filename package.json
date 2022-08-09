@@ -7,7 +7,7 @@
     "escodegen": "^1.14.3",
     "esprima": "^4.0.1",
     "luaparse": "^0.3.0",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "unquote": "^1.1.1"
   },
   "scripts": {
